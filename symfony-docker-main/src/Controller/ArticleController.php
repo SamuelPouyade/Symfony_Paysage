@@ -11,6 +11,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use App\Entity\Image;
 
 #[Route('/article')]
 class ArticleController extends AbstractController
@@ -28,19 +30,42 @@ class ArticleController extends AbstractController
     {
         $article = new Articles();
         $article->setDatePublication(new DateTime());
+
         $form = $this->createForm(ArticlesType::class, $article);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $imageFile = $form['image']->getData();
+        
+            if ($imageFile) {
+                $newFilename = uniqid().'.'.$imageFile->guessExtension();
+        
+                // Créez une nouvelle instance de l'entité Image
+                $image = new Image();
+                $image->setFilename($newFilename);
+        
+                // Déplacez le fichier dans le répertoire de destination (public/images)
+                $imageFile->move(
+                    $this->getParameter('kernel.project_dir') . '/public/images',
+                    $newFilename
+                );
+        
+                // Appelez explicitement persist sur l'entité Image
+                $entityManager->persist($image);
+        
+                // Associez l'instance de l'entité Image à l'article
+                $article->setImage($image);
+            }
+        
             $entityManager->persist($article);
             $entityManager->flush();
-
+        
             return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('article/new.html.twig', [
             'article' => $article,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -59,6 +84,28 @@ class ArticleController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $imageFile = $form['image']->getData();
+            
+            if ($imageFile) {
+                $newFilename = uniqid().'.'.$imageFile->guessExtension();
+                
+                // Créez une nouvelle instance de l'entité Image
+                $image = new Image();
+                $image->setFilename($newFilename);
+                
+                // Déplacez le fichier dans le répertoire de destination (public/images)
+                $imageFile->move(
+                    $this->getParameter('kernel.project_dir') . '/public/images',
+                    $newFilename
+                );
+                
+                // Appelez explicitement persist sur l'entité Image
+                $entityManager->persist($image);
+                
+                // Associez l'instance de l'entité Image à l'article
+                $article->setImage($image);
+            }
+
             $entityManager->flush();
 
             return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
@@ -66,7 +113,7 @@ class ArticleController extends AbstractController
 
         return $this->render('article/edit.html.twig', [
             'article' => $article,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 

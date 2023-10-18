@@ -23,8 +23,23 @@
             <th>Contenu</th>
             <td>{{ article.contenu }}</td>
         </tr>
+        {% if article.image %}
+            <img src="{{ asset('images/' ~ article.image.filename) }}" alt="Image de l'article">
+        {% endif %}
+
+        <h2>Commentaires</h2>
+        <ul>
+            {% for comment in article.comments %}
+                <li>
+                    {{ comment.contenu }}
+                </li>
+            {% endfor %}
+        </ul>
         </tbody>
     </table>
+
+    <h2>Ajouter un commentaire</h2>
+    {{ render(controller('App\\Controller\\CommentController::new', { 'article': article.id })) }}
 
     <a href="{{ path('app_article_index') }}" class="btn btn-primary">Retour à la liste</a>
 

@@ -26,6 +26,10 @@
                     <a href="{{ path('app_article_show', {'id': article.id}) }}" class="btn btn-primary">Voir</a>
                     <a href="{{ path('app_article_edit', {'id': article.id}) }}" class="btn btn-success">Editer</a>
                 </td>
+                {% if article.image %}
+                    <img src="{{ asset('images/' ~ article.image.filename) }}" alt="Image de l'article">
+                {% endif %}
+                
             </tr>
         {% else %}
             <tr>

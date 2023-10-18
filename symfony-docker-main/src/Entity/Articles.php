@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\ArticlesRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: ArticlesRepository::class)]
 class Articles
@@ -22,6 +24,17 @@ class Articles
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $contenu = null;
+
+    #[ORM\ManyToOne(targetEntity: Image::class)]
+    private $image;
+    
+    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'article', cascade: ['persist', 'remove'])]
+    private $comments;
+
+    public function __construct()
+    {
+        $this->comments = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -62,5 +75,24 @@ class Articles
         $this->contenu = $contenu;
 
         return $this;
+    }
+
+    public function getImage(): ?Image
+    {
+        return $this->image instanceof Image ? $this->image : null;
+    }
+
+    public function setImage($image): self
+    {
+        $this->image = $image;
+        return $this;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
     }
 }
