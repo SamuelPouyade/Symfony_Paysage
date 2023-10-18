@@ -1,0 +1,21 @@
+body {
+    background-color: #000; /* Fond noir */
+    color: #fff; /* Texte en blanc */
+    font-family: 'Arial', sans-serif;
+    text-align: center; /* Centrer le texte dans le corps */
+}
+
+.content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    font-size: 36px;
+}
+
+p {
+    font-size: 18px;
+    line-height: 1.5;
+}
