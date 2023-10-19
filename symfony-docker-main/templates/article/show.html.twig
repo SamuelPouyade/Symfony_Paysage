@@ -3,47 +3,33 @@
 {% block title %}Article{% endblock %}
 
 {% block body %}
-    <h1>Article</h1>
+    <div class="article-details">
+        <h1 class="article-title">{{ article.titre }}</h1>
 
-    <table class="table table-dark">
-        <tbody>
-        <tr>
-            <th>Id</th>
-            <td>{{ article.id }}</td>
-        </tr>
-        <tr>
-            <th>Date_publication</th>
-            <td>{{ article.datePublication ? article.datePublication|date('Y-m-d') : '' }}</td>
-        </tr>
-        <tr>
-            <th>Titre</th>
-            <td>{{ article.titre }}</td>
-        </tr>
-        <tr>
-            <th>Contenu</th>
-            <td>{{ article.contenu }}</td>
-        </tr>
+        <div class="article-meta">
+            <p class="article-date">{{ article.datePublication ? article.datePublication|date('Y-m-d') : '' }}</p>
+        </div>
+
         {% if article.image %}
             <img src="{{ asset('images/' ~ article.image.filename) }}" alt="Image de l'article">
         {% endif %}
 
-        <h2>Commentaires</h2>
-        <ul>
+        <p class="article-content">{{ article.contenu }}</p>
+
+        <h2 class="comments-title">Commentaires</h2>
+        <ul class="comment-list">
             {% for comment in article.comments %}
-                <li>
-                    {{ comment.contenu }}
-                </li>
+                <li class="comment-item">{{ comment.contenu }}</li>
             {% endfor %}
         </ul>
-        </tbody>
-    </table>
 
-    <h2>Ajouter un commentaire</h2>
-    {{ render(controller('App\\Controller\\CommentController::new', { 'article': article.id })) }}
+        <h2 class="add-comment-title">Ajouter un commentaire</h2>
+        {{ render(controller('App\\Controller\\CommentController::new', { 'article': article.id })) }}
 
-    <a href="{{ path('app_article_index') }}" class="btn btn-primary">Retour à la liste</a>
+        <a href="{{ path('app_article_index') }}" class="btn btn-primary">Retour à la liste</a>
 
-    <a href="{{ path('app_article_edit', {'id': article.id}) }}" class="btn btn-success">Editer</a>
+        <a href="{{ path('app_article_edit', {'id': article.id}) }}" class="btn btn-success">Editer</a>
 
-    {{ include('article/_delete_form.html.twig') }}
+        {{ include('article/_delete_form.html.twig') }}
+    </div>
 {% endblock %}

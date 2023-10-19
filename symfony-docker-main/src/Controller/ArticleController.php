@@ -20,10 +20,13 @@ class ArticleController extends AbstractController
     #[Route('/', name: 'app_article_index', methods: ['GET'])]
     public function index(ArticlesRepository $articlesRepository): Response
     {
+        $articles = $articlesRepository->findAll();
+
         return $this->render('article/index.html.twig', [
-            'articles' => $articlesRepository->findAll(),
+            'articles' => $articles,
         ]);
     }
+
 
     #[Route('/new', name: 'app_article_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response

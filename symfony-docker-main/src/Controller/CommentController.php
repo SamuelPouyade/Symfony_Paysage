@@ -30,7 +30,7 @@ class CommentController extends AbstractController
             return $this->redirectToRoute('app_article_show', ['id' => $article->getId()]);
         }
 
-        return $this->render('comment/new.html.twig', [
+        return $this->render('comment/_form.html.twig', [
             'form' => $form->createView(),
             'article' => $article,
         ]);

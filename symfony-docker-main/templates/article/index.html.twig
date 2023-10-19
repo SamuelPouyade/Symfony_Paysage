@@ -1,43 +1,31 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Article index{% endblock %}
+{% block title %}Liste des lieux à découvrir{% endblock %}
 
 {% block body %}
-    <h1>Article index</h1>
+    <div class="container">
+        <h1 class="mt-5 mb-4">Liste des lieux à découvrir</h1>
 
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Id</th>
-            <th>Date_publication</th>
-            <th>Titre</th>
-            <th>Contenu</th>
-            <th>actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for article in articles %}
-            <tr>
-                <td>{{ article.id }}</td>
-                <td>{{ article.datePublication ? article.datePublication|date('Y-m-d') : '' }}</td>
-                <td>{{ article.titre }}</td>
-                <td>{{ article.contenu }}</td>
-                <td>
-                    <a href="{{ path('app_article_show', {'id': article.id}) }}" class="btn btn-primary">Voir</a>
-                    <a href="{{ path('app_article_edit', {'id': article.id}) }}" class="btn btn-success">Editer</a>
-                </td>
-                {% if article.image %}
-                    <img src="{{ asset('images/' ~ article.image.filename) }}" alt="Image de l'article">
-                {% endif %}
-                
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">Aucun résultat</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+        <a href="{{ path('app_article_new') }}" class="btn btn-primary mb-4">Créer un nouvel article</a>
 
-    <a href="{{ path('app_article_new') }}" class="btn btn-primary">Créer un nouvel article</a>
+        <div class="row">
+            {% for article in articles %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        {% if article.image %}
+                            <img src="{{ asset('images/' ~ article.image.filename) }}" alt="Image de l'article" class="card-img-top">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ article.titre }}</h5>
+                            <p class="card-text">{{ article.contenu }}</p>
+                            <a href="{{ path('app_article_show', {'id': article.id}) }}" class="btn btn-primary">Voir</a>
+                            <a href="{{ path('app_article_edit', {'id': article.id}) }}" class="btn btn-success">Éditer</a>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p class="col-md-12">Aucun résultat</p>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}
