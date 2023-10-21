@@ -3,11 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Articles;
-use DateTime;
+use App\Entity\Comment;
 use App\Form\ArticlesType;
+use App\Form\CommentType;
+use DateTime;
 use App\Repository\ArticlesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -39,30 +42,26 @@ class ArticleController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $imageFile = $form['image']->getData();
-        
+
             if ($imageFile) {
                 $newFilename = uniqid().'.'.$imageFile->guessExtension();
-        
-                // Créez une nouvelle instance de l'entité Image
+
                 $image = new Image();
                 $image->setFilename($newFilename);
-        
-                // Déplacez le fichier dans le répertoire de destination (public/images)
+
                 $imageFile->move(
                     $this->getParameter('kernel.project_dir') . '/public/images',
                     $newFilename
                 );
-        
-                // Appelez explicitement persist sur l'entité Image
+
                 $entityManager->persist($image);
-        
-                // Associez l'instance de l'entité Image à l'article
+
                 $article->setImage($image);
             }
-        
+
             $entityManager->persist($article);
             $entityManager->flush();
-        
+
             return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -73,10 +72,15 @@ class ArticleController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_article_show', methods: ['GET'])]
-    public function show(Articles $article): Response
+    public function show(Request $request, Articles $article): Response
     {
+        $comment = new Comment();
+        $commentForm = $this->createForm(CommentType::class, $comment);
+        $commentForm->handleRequest($request);
+
         return $this->render('article/show.html.twig', [
             'article' => $article,
+            'comment_form' => $commentForm->createView(),
         ]);
     }
 
@@ -88,24 +92,20 @@ class ArticleController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $imageFile = $form['image']->getData();
-            
+
             if ($imageFile) {
                 $newFilename = uniqid().'.'.$imageFile->guessExtension();
-                
-                // Créez une nouvelle instance de l'entité Image
+
                 $image = new Image();
                 $image->setFilename($newFilename);
-                
-                // Déplacez le fichier dans le répertoire de destination (public/images)
+
                 $imageFile->move(
                     $this->getParameter('kernel.project_dir') . '/public/images',
                     $newFilename
                 );
-                
-                // Appelez explicitement persist sur l'entité Image
+
                 $entityManager->persist($image);
-                
-                // Associez l'instance de l'entité Image à l'article
+
                 $article->setImage($image);
             }
 

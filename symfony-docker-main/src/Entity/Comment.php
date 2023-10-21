@@ -3,9 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\CommentRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Articles;
-use App\Entity\User;
+
 
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
 class Comment
@@ -15,37 +15,48 @@ class Comment
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $contenu = null;
+    #[ORM\Column(type: 'text')]
+    private $content;
 
-    #[ORM\ManyToOne(targetEntity: Articles::class, inversedBy: 'comments')]
-    #[ORM\JoinColumn(nullable: false)]
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class)
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    private $user;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Articles::class)
+     * @ORM\JoinColumn(name="article_id", referencedColumnName="id", nullable=false)
+     */
     private $article;
 
-    #[ORM\ManyToOne(targetEntity: Users::class)]
-    #[ORM\JoinColumn(nullable: false)]
-    private $user;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getContenu(): ?string
+    public function getContent(): ?string
     {
-        return $this->contenu;
+        return $this->content;
     }
 
-    public function setContenu(string $contenu): static
+    public function setContent(string $content): self
     {
-        $this->contenu = $contenu;
+        $this->content = $content;
 
         return $this;
     }
 
-    public function setArticle(Articles $article): self
+    public function getUser(): ?Users
     {
-        $this->article = $article;
+        return $this->user;
+    }
+
+    public function setUser(?Users $user): self
+    {
+        $this->user = $user;
+
         return $this;
     }
 
@@ -54,16 +65,10 @@ class Comment
         return $this->article;
     }
 
-
-    public function setUser(Users $user): self
+    public function setArticle(?Articles $article): self
     {
-        $this->user = $user;
+        $this->article = $article;
+
         return $this;
-    }
-
-    // Ajoutez cette méthode pour obtenir l'utilisateur associé au commentaire
-    public function getUser(): ?Users
-    {
-        return $this->user;
     }
 }

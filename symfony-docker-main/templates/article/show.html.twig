@@ -16,20 +16,24 @@
 
         <p class="article-content">{{ article.contenu }}</p>
 
-        <h2 class="comments-title">Commentaires</h2>
-        <ul class="comment-list">
-            {% for comment in article.comments %}
-                <li class="comment-item">{{ comment.contenu }}</li>
-            {% endfor %}
-        </ul>
+        {{ dump(article.id) }}
+        {{ form_start(comment_form, {'action': path('app_comment_new', {'articleId': article.id}), 'method': 'POST'}) }}
+        {{ form_widget(comment_form) }}
+        <button type="submit" class="btn btn-primary">Ajouter un commentaire</button>
+        {{ form_end(comment_form) }}
 
-        <h2 class="add-comment-title">Ajouter un commentaire</h2>
-        {{ render(controller('App\\Controller\\CommentController::new', { 'article': article.id })) }}
+
+        <div class="flash-messages">
+            {% for flashType, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ flashType }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
 
         <a href="{{ path('app_article_index') }}" class="btn btn-primary">Retour à la liste</a>
-
-        <a href="{{ path('app_article_edit', {'id': article.id}) }}" class="btn btn-success">Editer</a>
-
-        {{ include('article/_delete_form.html.twig') }}
+        <a href="{{ path('app_article_edit', {'id': article.id}) }}" class="btn btn-success">Éditer</a>
     </div>
 {% endblock %}

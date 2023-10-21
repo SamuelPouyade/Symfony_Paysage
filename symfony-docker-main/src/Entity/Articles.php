@@ -27,9 +27,9 @@ class Articles
 
     #[ORM\ManyToOne(targetEntity: Image::class)]
     private $image;
-    
-    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'article', cascade: ['persist', 'remove'])]
-    private $comments;
+
+    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'article')]
+    private ?Collection $comments = null;
 
     public function __construct()
     {
@@ -88,11 +88,13 @@ class Articles
         return $this;
     }
 
-    /**
-     * @return Collection|Comment[]
-     */
-    public function getComments(): Collection
+    public function getComments(): ?Collection
     {
         return $this->comments;
+    }
+
+    public function __toString()
+    {
+        return $this->getTitre();
     }
 }

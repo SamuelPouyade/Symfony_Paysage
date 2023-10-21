@@ -10,6 +10,11 @@
     <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
 </head>
 <body>
+{% for message in app.flashes('success') %}
+    <div class="alert alert-success">
+        {{ message }}
+    </div>
+{% endfor %}
 <header style="background-image: url('/images/Montagne.jpg');">
     <div class="container position-relative px-4 px-lg-5">
         <div class="row justify-content-center">
