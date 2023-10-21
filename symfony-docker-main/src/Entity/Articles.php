@@ -34,6 +34,10 @@ class Articles
     #[ORM\Column(type: 'boolean')]
     private bool $isValidated = false;
 
+    #[ORM\ManyToOne(targetEntity: Department::class)]
+    private $department;
+
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -110,5 +114,15 @@ class Articles
         return $this;
     }
 
+    public function getDepartment(): ?Department
+    {
+        return $this->department;
+    }
+
+    public function setDepartment(?Department $department): self
+    {
+        $this->department = $department;
+        return $this;
+    }
 
 }
