@@ -1,4 +1,22 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-<button class="btn">{{ button_label|default('Sauvegarder') }}</button>
+<div class="custom-form">
+    <div class="form-group">
+        {{ form_row(form.titre, {'attr': {'class': 'custom-input'}}) }}
+    </div>
+    <div class="form-group">
+        {{ form_row(form.contenu, {'attr': {'class': 'custom-input'}}) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.department, 'Département', {'label_attr': {'class': 'custom-label'}}) }}
+        {{ form_widget(form.department, {'attr': {'class': 'custom-select'}}) }}
+    </div>
+    <div class="form-group">
+        {{ form_label(form.image, 'Image (JPG, JPEG, or PNG file)', {'label_attr': {'class': 'custom-label'}}) }}
+        {{ form_widget(form.image, {'attr': {'class': 'custom-file-input'}}) }}
+
+        {# Ajoutez la classe 'd-none' pour cacher le texte "Aucun fichier sélectionné" #}
+        <span class="d-none">Aucun fichier sélectionné</span>
+    </div>
+</div>
+<button class="btn btn-primary">{{ button_label|default('Sauvegarder') }}</button>
 {{ form_end(form) }}

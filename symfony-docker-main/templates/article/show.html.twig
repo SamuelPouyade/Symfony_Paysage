@@ -11,25 +11,32 @@
         </div>
 
         {% if article.image %}
-            <img src="{{ asset('images/' ~ article.image.filename) }}" alt="Image de l'article">
+            <img src="{{ asset('images/' ~ article.image.filename) }}" alt="Image de l'article" style="max-width: 100%; max-height: 400px; height: auto;"> <!-- Réduit la taille de l'image -->
         {% endif %}
 
         <p class="article-content">{{ article.contenu }}</p>
 
         <h2>Commentaires</h2>
-        <ul>
+        <ul class="comment-list">
             {% for comment in article.comments %}
-                <li>{{ comment.content }}</li>
+                <li class="comment-item">
+                    {{ comment.content }}
+                </li>
             {% endfor %}
         </ul>
 
-        {{ form_start(comment_form, {'action': path('app_comment_new', {'articleId': article.id}), 'method': 'POST'}) }}
-        {{ form_widget(comment_form) }}
-        <button type="submit" class="btn btn-primary">Ajouter un commentaire</button>
-        {{ form_end(comment_form) }}
+        {{ form_start(comment_form, {'action': path('app_comment_new', {'articleId': article.id}), 'method': 'POST', 'attr': {'class': 'custom-form-class'}}) }}
 
+        <div class="form-group">
+            {{ form_row(comment_form.content, {'attr': {'class': 'custom-input'}}) }}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Ajouter un commentaire</button>
+
+        {{ form_end(comment_form) }}
 
         <a href="{{ path('app_article_index') }}" class="btn btn-primary">Retour à la liste</a>
         <a href="{{ path('app_article_edit', {'id': article.id}) }}" class="btn btn-success">Éditer</a>
+        <a href="{{ path('app_article_delete', {'id': article.id}) }}" class="btn btn-danger">Supprimer</a>
     </div>
 {% endblock %}

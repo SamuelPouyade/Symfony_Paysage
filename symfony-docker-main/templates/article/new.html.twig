@@ -3,11 +3,15 @@
 {% block title %}Nouvel Article{% endblock %}
 
 {% block body %}
+<div class="text-center"> <!-- Utilisez la classe text-center pour centrer le contenu -->
     <h1>Créer un nouvel Article</h1>
+</div>
 
-    <div class="form mb-2">
-        {{ include('article/_form.html.twig') }}
+    <div class="container">
+        <div class="form mb-2">
+            {{ include('article/_form.html.twig') }}
+        </div>
     </div>
 
-    <a href="{{ path('app_article_index') }}" class="btn btn-primary">Retour à la liste</a>
+<a href="{{ path('app_article_index') }}" class="btn btn-primary">Retour à la liste</a>
 {% endblock %}

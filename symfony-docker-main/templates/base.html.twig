@@ -29,11 +29,11 @@
                     {% if app.user %}
                         <li class="list-inline-item"><a class="nav-link" href="{{ path('app_change_password') }}">Changer le mot de passe</a></li>
                         <li class="list-inline-item"><a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a></li>
+                        <li class="list-inline-item"><a class="nav-link" href="{{ path('app_article_perso') }}">Mes posts</a></li>
                     {% else %}
                         <li class="list-inline-item"><a class="nav-link" href="{{ path('app_login') }}">Connexion</a></li>
 
                     {% endif %}
-                    <li class="list-inline-item"><a class="nav-link" href="{{ path('app_article_perso') }}">Mes posts</a></li>
                     {% if app.request.attributes.get('_route') != 'app_home' %}
                         <li class="list-inline-item"><a class="nav-link" href="{{ path('app_article_index') }}">Accueil</a></li>
                     {% endif %}
