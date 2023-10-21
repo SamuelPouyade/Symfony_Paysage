@@ -16,22 +16,18 @@
 
         <p class="article-content">{{ article.contenu }}</p>
 
-        {{ dump(article.id) }}
+        <h2>Commentaires</h2>
+        <ul>
+            {% for comment in article.comments %}
+                <li>{{ comment.content }}</li>
+            {% endfor %}
+        </ul>
+
         {{ form_start(comment_form, {'action': path('app_comment_new', {'articleId': article.id}), 'method': 'POST'}) }}
         {{ form_widget(comment_form) }}
         <button type="submit" class="btn btn-primary">Ajouter un commentaire</button>
         {{ form_end(comment_form) }}
 
-
-        <div class="flash-messages">
-            {% for flashType, messages in app.flashes %}
-                {% for message in messages %}
-                    <div class="alert alert-{{ flashType }}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            {% endfor %}
-        </div>
 
         <a href="{{ path('app_article_index') }}" class="btn btn-primary">Retour à la liste</a>
         <a href="{{ path('app_article_edit', {'id': article.id}) }}" class="btn btn-success">Éditer</a>

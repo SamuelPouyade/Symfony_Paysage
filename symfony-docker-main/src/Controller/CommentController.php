@@ -39,7 +39,11 @@ class CommentController extends AbstractController
             $comment->setArticle($article);
             $entityManager->persist($comment);
             $entityManager->flush();
-            return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
+            return $this->render('article/show.html.twig', [
+                'article' => $article,
+                'comment_form' => $form->createView(),
+                'articleId' => $articleId,
+            ]);
         }
 
         return $this->render('article/show.html.twig', [
