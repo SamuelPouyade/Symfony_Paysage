@@ -10,22 +10,25 @@
 
         <div class="row">
             {% for article in articles %}
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        {% if article.image %}
-                            <img src="{{ asset('images/' ~ article.image.filename) }}" alt="Image de l'article" class="card-img-top">
-                        {% endif %}
-                        <div class="card-body">
-                            <h5 class="card-title">{{ article.titre }}</h5>
-                            <p class="card-text">{{ article.contenu }}</p>
-                            <a href="{{ path('app_article_show', {'id': article.id}) }}" class="btn btn-primary">Voir</a>
-                            <a href="{{ path('app_article_edit', {'id': article.id}) }}" class="btn btn-success">Éditer</a>
+                {% if article.isValidated  %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card">
+                            {% if article.image %}
+                                <img src="{{ asset('images/' ~ article.image.filename) }}" alt="Image de l'article" class="card-img-top">
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">{{ article.titre }}</h5>
+                                <p class="card-text">{{ article.contenu }}</p>
+                                <a href="{{ path('app_article_show', {'id': article.id}) }}" class="btn btn-primary">Voir</a>
+                                <a href="{{ path('app_article_edit', {'id': article.id}) }}" class="btn btn-success">Éditer</a>
+                            </div>
                         </div>
                     </div>
-                </div>
-            {% else %}
-                <p class="col-md-12">Aucun résultat</p>
+                {% endif %}
             {% endfor %}
+            {% if articles is empty %}
+                <p class="col-md-12">Aucun résultat</p>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

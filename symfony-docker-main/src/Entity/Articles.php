@@ -31,6 +31,9 @@ class Articles
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'article')]
     private ?Collection $comments = null;
 
+    #[ORM\Column(type: 'boolean')]
+    private bool $isValidated = false;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -95,6 +98,16 @@ class Articles
     public function __toString()
     {
         return $this->titre ?? '';
+    }
+    public function getIsValidated(): bool
+    {
+        return $this->isValidated;
+    }
+
+    public function setIsValidated(bool $isValidated): self
+    {
+        $this->isValidated = $isValidated;
+        return $this;
     }
 
 

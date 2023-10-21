@@ -130,4 +130,27 @@ class ArticleController extends AbstractController
 
         return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    public function validateArticle(Articles $article, Security $security, FlashBagInterface $flashBag): JsonResponse
+    {
+        $user = $security->getUser();
+
+        // Vérifiez si l'utilisateur actuel est administrateur ou a les autorisations nécessaires pour valider l'article.
+        // Vous pouvez définir votre propre logique de vérification des autorisations.
+
+        if ($user->isAdmin() && !$article->isValidated()) {
+            $article->setIsValidated(true);
+
+            // Enregistrez les modifications
+            $this->getDoctrine()->getManager()->flush();
+
+            // Ajoutez un message flash pour informer de la validation de l'article.
+            $flashBag->add('success', 'L\'article a été validé avec succès.');
+
+            return new JsonResponse(['message' => 'Article validé avec succès.']);
+        } else {
+            // Gérez le cas où l'utilisateur n'a pas les autorisations requises pour valider l'article.
+            return new JsonResponse(['message' => 'Vous n\'avez pas l\'autorisation de valider cet article.'], 403);
+        }
+    }
 }

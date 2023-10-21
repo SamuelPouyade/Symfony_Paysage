@@ -1,0 +1,15 @@
+easy_admin:
+    entities:
+        Articles:
+            class: App\Entity\Articles
+            label: Articles
+            list:
+                fields:
+                    - { property: 'id', label: 'ID' }
+                    - { property: 'titre', label: 'Titre' }
+                    - { property: 'datePublication', label: 'Date de Publication' }
+                    - { property: 'isValidated', label: 'Validé' }
+            actions:
+                - { name: 'show', label: 'Voir' }
+                - { name: 'edit', label: 'Éditer' }
+                - { name: 'delete', label: 'Supprimer' }
