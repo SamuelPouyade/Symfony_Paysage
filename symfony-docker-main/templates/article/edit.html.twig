@@ -5,6 +5,9 @@
 {% block body %}
     <h1>Modification d'Article</h1>
 
+    {% if article.image %}
+        <img src="{{ asset('images/' ~ article.image.filename) }}" alt="Image de l'article" class="card-img-top">
+    {% endif %}
     {{ include('article/_form.html.twig', {'button_label': 'Modifier'}) }}
 
     <a href="{{ path('app_article_index') }}" class="btn btn-primary">Retour à la liste</a>

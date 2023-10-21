@@ -16,6 +16,9 @@ class Image
     #[ORM\Column(length: 255)]
     private ?string $filename = null;
 
+    #[Vich\UploadableField(mapping: 'images', fileNameProperty: 'filename')]
+    private ?File $imageFile = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -31,5 +34,24 @@ class Image
         $this->filename = $filename;
 
         return $this;
+    }
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageFile(?File $imageFile): self
+    {
+        $this->imageFile = $imageFile;
+        if ($imageFile) {
+            $this->updatedAt = new \DateTimeImmutable();
+        }
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->getFilename();
     }
 }

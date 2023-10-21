@@ -41,7 +41,7 @@ class ArticleController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $imageFile = $form['image']->getData();
+            $imageFile = $form['image']->getData(); // Notez le changement de nom ici
 
             if ($imageFile) {
                 $newFilename = uniqid().'.'.$imageFile->guessExtension();
@@ -87,28 +87,33 @@ class ArticleController extends AbstractController
     #[Route('/{id}/edit', name: 'app_article_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Articles $article, EntityManagerInterface $entityManager): Response
     {
+        $existingImage = $article->getImage();
         $form = $this->createForm(ArticlesType::class, $article);
         $form->handleRequest($request);
+         // Image existante
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $imageFile = $form['image']->getData();
+            $newImageFile = $form['image']->getData(); // Nouveau fichier
 
-            if ($imageFile) {
-                $newFilename = uniqid().'.'.$imageFile->guessExtension();
+            if ($newImageFile !== null) {
+                // Un nouveau fichier a été téléchargé, traitez-le
+                $newFilename = uniqid().'.'.$newImageFile->guessExtension();
+                $newImage = new Image();
+                $newImage->setFilename($newFilename);
 
-                $image = new Image();
-                $image->setFilename($newFilename);
-
-                $imageFile->move(
+                $newImageFile->move(
                     $this->getParameter('kernel.project_dir') . '/public/images',
                     $newFilename
                 );
 
-                $entityManager->persist($image);
-
-                $article->setImage($image);
+                $entityManager->persist($newImage);
+                $article->setImage($newImage); // Définir le champ image sur la nouvelle image
+            } else {
+                // Aucun nouveau fichier n'a été téléchargé, conservez l'image existante
+                $article->setImage($existingImage); // Rétablir l'image existante
             }
 
+            $entityManager->persist($article);
             $entityManager->flush();
 
             return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
@@ -119,6 +124,10 @@ class ArticleController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
+
+
+
 
     #[Route('/{id}', name: 'app_article_delete', methods: ['POST'])]
     public function delete(Request $request, Articles $article, EntityManagerInterface $entityManager): Response

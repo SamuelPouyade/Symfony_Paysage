@@ -5,7 +5,9 @@ namespace App\Form;
 
 use App\Entity\Articles;
 use App\Entity\Department;
+use App\Entity\Image;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -25,10 +27,12 @@ class ArticlesType extends AbstractType
                 'placeholder' => 'Sélectionnez un département',
             ])
             ->add('image', FileType::class, [
-                'label' => 'Image de l\'article',
-                'required' => false,
+                'label' => 'Image (JPG, JPEG, or PNG file)',
+                'required' => false, // Allow the field to be empty
+                'data_class' => null, // Set the data_class to null to avoid conflicts
             ]);
     }
+
 
     public function configureOptions(OptionsResolver $resolver)
     {
