@@ -6,6 +6,7 @@ use App\Entity\Articles;
 use App\Entity\Comment;
 use App\Form\ArticlesType;
 use App\Form\CommentType;
+use App\Repository\DepartmentRepository;
 use DateTime;
 use App\Repository\ArticlesRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,12 +22,17 @@ use App\Entity\Image;
 class ArticleController extends AbstractController
 {
     #[Route('/', name: 'app_article_index', methods: ['GET'])]
-    public function index(ArticlesRepository $articlesRepository): Response
+    public function index(ArticlesRepository $articlesRepository, DepartmentRepository $departmentRepository, Request $request): Response
     {
-        $articles = $articlesRepository->findAll();
+        $selectedDepartmentId = $request->query->get('department', null);
+
+        $articles = $articlesRepository->findByDepartment($selectedDepartmentId);
+        $departments = $departmentRepository->findAll();
 
         return $this->render('article/index.html.twig', [
             'articles' => $articles,
+            'departments' => $departments,
+            'selectedDepartment' => $selectedDepartmentId,
         ]);
     }
 

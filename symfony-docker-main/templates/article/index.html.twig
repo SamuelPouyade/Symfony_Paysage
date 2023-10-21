@@ -8,9 +8,23 @@
 
         <a href="{{ path('app_article_new') }}" class="btn btn-primary mb-4">Créer un nouvel article</a>
 
+        <form action="{{ path('app_article_index') }}" method="get">
+            <div class="form-group">
+                <label for="department">Filtrer par département :</label>
+                <select name="department" id="department" class="form-control" onchange="this.form.submit()">
+                    <option value="">Tous les départements</option>
+                    {% for department in departments %}
+                        <option value="{{ department.id }}" {% if department.id == selectedDepartment %}selected{% endif %}>
+                            {{ department.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </form>
+
         <div class="row">
             {% for article in articles %}
-                {% if article.isValidated  %}
+                {% if article.isValidated and article.department.id == selectedDepartment %}
                     <div class="col-md-4 mb-4">
                         <div class="card">
                             {% if article.image %}
@@ -31,4 +45,5 @@
             {% endif %}
         </div>
     </div>
+
 {% endblock %}
