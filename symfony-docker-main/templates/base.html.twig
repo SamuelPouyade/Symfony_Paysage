@@ -10,12 +10,7 @@
     <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
 </head>
 <body>
-{% for message in app.flashes('success') %}
-    <div class="alert alert-success">
-        {{ message }}
-    </div>
-{% endfor %}
-<header style="background-image: url('/images/Montagne.jpg');">
+<header style="background-image: url('/images/home-bg.jpg');">
     <div class="container position-relative px-4 px-lg-5">
         <div class="row justify-content-center">
             <div class="col-md-10 col-lg-8 col-xl-7">
@@ -23,6 +18,15 @@
                     {% block header %}
                         <h1>Découvrir la France</h1>
                         <span class="subheading">Explorez les merveilles de la France</span>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="{{ path('admin') }}">Admin</a></li>
+                        {% endif %}
+
+                        {% if app.user %}
+                            <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="{{ path('app_logout') }}">Déconnexion</a></li>
+                        {% else %}
+                            <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="{{ path('app_login') }}">Connexion</a></li>
+                        {% endif %}
                     {% endblock %}
                 </div>
             </div>
@@ -64,7 +68,7 @@
                         </a>
                     </li>
                 </ul>
-                <div class="small text-center text-muted fst-italic">Découvrir la France &copy; 2023</div>
+                <div class="small text-center text-muted fst-italic">Samuel Pouyade &copy; 2023</div>
             </div>
         </div>
     </div>
