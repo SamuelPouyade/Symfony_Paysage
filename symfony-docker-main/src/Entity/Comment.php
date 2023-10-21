@@ -18,16 +18,12 @@ class Comment
     #[ORM\Column(type: 'text')]
     private $content;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class)
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: Users::class)]
+    #[ORM\JoinColumn(name: "user_id", referencedColumnName: "id")]
     private $user;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Articles::class)
-     * @ORM\JoinColumn(name="article_id", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\ManyToOne(targetEntity: Articles::class, cascade: ["persist"])]
+    #[ORM\JoinColumn(name: "article_id", referencedColumnName: "id", nullable: false)]
     private $article;
 
 

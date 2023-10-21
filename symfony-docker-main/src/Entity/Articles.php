@@ -92,9 +92,10 @@ class Articles
     {
         return $this->comments;
     }
-
     public function __toString()
     {
-        return $this->getTitre();
+        return $this->titre ?? '';
     }
+
+
 }
