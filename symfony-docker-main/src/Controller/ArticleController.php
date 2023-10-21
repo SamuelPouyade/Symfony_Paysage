@@ -31,7 +31,7 @@ class ArticleController extends AbstractController
         $departments = $departmentRepository->findAll();
 
         $pagination = $paginator->paginate(
-            $articles,  // Utilisez le résultat de la recherche directement ici
+            $articles,
             $request->query->getInt('page', 1),
             6
         );
@@ -43,6 +43,26 @@ class ArticleController extends AbstractController
         ]);
     }
 
+    #[Route('/', name: 'app_article_perso', methods: ['GET'])]
+    public function perso(ArticlesRepository $articlesRepository, DepartmentRepository $departmentRepository, Request $request, PaginatorInterface $paginator): Response
+    {
+        $selectedDepartmentId = $request->query->get('department', null);
+
+        $articles = $articlesRepository->findByDepartment($selectedDepartmentId);
+        $departments = $departmentRepository->findAll();
+
+        $pagination = $paginator->paginate(
+            $articles,
+            $request->query->getInt('page', 1),
+            6
+        );
+
+        return $this->render('article/perso.html.twig', [
+            'pagination' => $pagination,
+            'departments' => $departments,
+            'selectedDepartment' => $selectedDepartmentId,
+        ]);
+    }
 
 
     #[Route('/new', name: 'app_article_new', methods: ['GET', 'POST'])]
@@ -55,7 +75,7 @@ class ArticleController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $imageFile = $form['image']->getData(); // Notez le changement de nom ici
+            $imageFile = $form['image']->getData();
 
             if ($imageFile) {
                 $newFilename = uniqid().'.'.$imageFile->guessExtension();
@@ -73,6 +93,7 @@ class ArticleController extends AbstractController
                 $article->setImage($image);
             }
 
+            $article->setAuthor($this->getUser());
             $entityManager->persist($article);
             $entityManager->flush();
 
@@ -104,13 +125,11 @@ class ArticleController extends AbstractController
         $existingImage = $article->getImage();
         $form = $this->createForm(ArticlesType::class, $article);
         $form->handleRequest($request);
-         // Image existante
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $newImageFile = $form['image']->getData(); // Nouveau fichier
+            $newImageFile = $form['image']->getData();
 
             if ($newImageFile !== null) {
-                // Un nouveau fichier a été téléchargé, traitez-le
                 $newFilename = uniqid().'.'.$newImageFile->guessExtension();
                 $newImage = new Image();
                 $newImage->setFilename($newFilename);
@@ -121,12 +140,12 @@ class ArticleController extends AbstractController
                 );
 
                 $entityManager->persist($newImage);
-                $article->setImage($newImage); // Définir le champ image sur la nouvelle image
+                $article->setImage($newImage);
             } else {
-                // Aucun nouveau fichier n'a été téléchargé, conservez l'image existante
-                $article->setImage($existingImage); // Rétablir l'image existante
+                $article->setImage($existingImage);
             }
 
+            $article->setAuthor($this->getUser());
             $entityManager->persist($article);
             $entityManager->flush();
 
@@ -158,21 +177,15 @@ class ArticleController extends AbstractController
     {
         $user = $security->getUser();
 
-        // Vérifiez si l'utilisateur actuel est administrateur ou a les autorisations nécessaires pour valider l'article.
-        // Vous pouvez définir votre propre logique de vérification des autorisations.
-
         if ($user->isAdmin() && !$article->isValidated()) {
             $article->setIsValidated(true);
 
-            // Enregistrez les modifications
             $this->getDoctrine()->getManager()->flush();
 
-            // Ajoutez un message flash pour informer de la validation de l'article.
             $flashBag->add('success', 'L\'article a été validé avec succès.');
 
             return new JsonResponse(['message' => 'Article validé avec succès.']);
         } else {
-            // Gérez le cas où l'utilisateur n'a pas les autorisations requises pour valider l'article.
             return new JsonResponse(['message' => 'Vous n\'avez pas l\'autorisation de valider cet article.'], 403);
         }
     }

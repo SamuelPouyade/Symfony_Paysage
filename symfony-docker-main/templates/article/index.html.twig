@@ -25,16 +25,26 @@
         <div class="row">
             {% for article in pagination %}
                 {% if article.isValidated and article.department.id == selectedDepartment %}
-                    <div class="col-md-4 mb-4">
+                    <div class="col-md-12 mb-6">
                         <div class="card">
-                            {% if article.image %}
-                                <img src="{{ asset('images/' ~ article.image.filename) }}" alt="Image de l'article" class="card-img-top">
-                            {% endif %}
+                            <h5 class="card-title mb-6">{{ article.titre }}</h5>
                             <div class="card-body">
-                                <h5 class="card-title">{{ article.titre }}</h5>
-                                <p class="card-text">{{ article.contenu }}</p>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        {% if article.image %}
+                                            <img src="{{ asset('images/' ~ article.image.filename) }}" alt="Image de l'article" class="card-img-top" style="max-height: 200px;">
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p class="card-text">{{ article.contenu }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
                                 <a href="{{ path('app_article_show', {'id': article.id}) }}" class="btn btn-primary">Voir</a>
-                                <a href="{{ path('app_article_edit', {'id': article.id}) }}" class="btn btn-success">Éditer</a>
+                                {% if is_granted('EDIT', article) or article.getAuthor() == app.user %}
+                                    <a href="{{ path('app_article_edit', {'id': article.id}) }}" class="btn btn-success">Éditer</a>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -44,7 +54,7 @@
 
         <div class="row">
             <div class="col-md-12 text-center">
-                {{ knp_pagination_render(pagination) }} {# Afficher les liens de pagination #}
+                {{ knp_pagination_render(pagination) }}
             </div>
         </div>
 
@@ -52,4 +62,5 @@
             <p class="col-md-12">Aucun résultat</p>
         {% endif %}
     </div>
+
 {% endblock %}

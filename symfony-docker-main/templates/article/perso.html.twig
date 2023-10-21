@@ -1,0 +1,122 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des lieux à découvrir{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="mt-5 mb-4">Liste des lieux à découvrir</h1>
+
+        <a href="{{ path('app_article_new') }}" class="btn btn-primary mb-4">Créer un nouvel article</a>
+
+        <form action="{{ path('app_article_index') }}" method="get">
+            <div class="form-group">
+                <label for="department">Filtrer par département :</label>
+                <select name="department" id="department" class="form-control" onchange="this.form.submit()">
+                    <option value="">Tous les départements</option>
+                    {% for department in departments %}
+                        <option value="{{ department.id }}" {% if department.id == selectedDepartment %}selected{% endif %}>
+                            {{ department.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </form>
+
+        <div class="row">
+            {% for article in pagination %}
+                {% if article.getAuthor() == app.user %}
+                    {# Afficher les articles de l'utilisateur connecté #}
+                    <div class="col-md-12 mb-6">
+                        <div class="card">
+                            <h5 class="card-title mb-6">{{ article.titre }}</h5>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        {% if article.image %}
+                                            <img src="{{ asset('images/' ~ article.image.filename) }}" alt="Image de l'article" class="card-img-top" style="max-height: 200px;">
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p class="card-text">{{ article.contenu }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{{ path('app_article_show', {'id': article.id}) }}" class="btn btn-primary">Voir</a>
+                                {% if is_granted('EDIT', article) %}
+                                    <a href="{{ path('app_article_edit', {'id': article.id}) }}" class="btn btn-success">Éditer</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <div class="row">
+            {% for article in pagination %}
+                {% if article.isValidated and article.getAuthor() != app.user %}
+                    {# Afficher les articles validés de d'autres auteurs #}
+                    <div class="col-md-12 mb-6">
+                        <div auseror>
+                            <h5 class="card-title mb-6">{{ article.titre }}</h5>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        {% if article.image %}
+                                            <img src="{{ asset('images/' ~ article.image.filename) }}" alt="Image de l'article" class="card-img-top" style="max-height: 200px;">
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p class="card-text">{{ article.contenu }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{{ path('app_article_show', {'id': article.id}) }}" class="btn btn-primary">Voir</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <div class="row">
+            {% for article in pagination %}
+                {% if not article.isValidated and article.getAuthor() != app.user %}
+                    {# Afficher les articles en cours de validation de d'autres auteurs #}
+                    <div class="col-md-12 mb-6">
+                        <div class="card">
+                            <h5 class="card-title mb-6">{{ article.titre }}</h5>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        {% if article.image %}
+                                            <img src="{{ asset('images/' ~ article.image.filename) }}" alt="Image de l'article" class="card-img-top" style="max-height: 200px;">
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p class="card-text">{{ article.contenu }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{{ path('app_article_show', {'id': article.id}) }}" class="btn btn-primary">Voir</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 text-center">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+
+        {% if pagination.getTotalItemCount() == 0 %}
+            <p class="col-md-12">Aucun résultat</p>
+        {% endif %}
+    </div>
+{% endblock %}

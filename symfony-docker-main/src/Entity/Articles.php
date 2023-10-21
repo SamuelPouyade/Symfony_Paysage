@@ -37,10 +37,25 @@ class Articles
     #[ORM\ManyToOne(targetEntity: Department::class)]
     private $department;
 
+    #[ORM\ManyToOne(targetEntity: Users::class)]
+    private $author;
+
 
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+    }
+
+    public function getAuthor(): ?Users
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?Users $author): self
+    {
+        $this->author = $author;
+
+        return $this;
     }
 
     public function getId(): ?int
