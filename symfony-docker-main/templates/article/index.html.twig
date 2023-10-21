@@ -23,7 +23,7 @@
         </form>
 
         <div class="row">
-            {% for article in articles %}
+            {% for article in pagination %}
                 {% if article.isValidated and article.department.id == selectedDepartment %}
                     <div class="col-md-4 mb-4">
                         <div class="card">
@@ -40,10 +40,16 @@
                     </div>
                 {% endif %}
             {% endfor %}
-            {% if articles is empty %}
-                <p class="col-md-12">Aucun résultat</p>
-            {% endif %}
         </div>
-    </div>
 
+        <div class="row">
+            <div class="col-md-12 text-center">
+                {{ knp_pagination_render(pagination) }} {# Afficher les liens de pagination #}
+            </div>
+        </div>
+
+        {% if pagination.getTotalItemCount() == 0 %}
+            <p class="col-md-12">Aucun résultat</p>
+        {% endif %}
+    </div>
 {% endblock %}

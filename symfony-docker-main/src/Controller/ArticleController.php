@@ -9,6 +9,7 @@ use App\Form\CommentType;
 use App\Repository\DepartmentRepository;
 use DateTime;
 use App\Repository\ArticlesRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -22,19 +23,26 @@ use App\Entity\Image;
 class ArticleController extends AbstractController
 {
     #[Route('/', name: 'app_article_index', methods: ['GET'])]
-    public function index(ArticlesRepository $articlesRepository, DepartmentRepository $departmentRepository, Request $request): Response
+    public function index(ArticlesRepository $articlesRepository, DepartmentRepository $departmentRepository, Request $request, PaginatorInterface $paginator): Response
     {
         $selectedDepartmentId = $request->query->get('department', null);
 
         $articles = $articlesRepository->findByDepartment($selectedDepartmentId);
         $departments = $departmentRepository->findAll();
 
+        $pagination = $paginator->paginate(
+            $articles,  // Utilisez le résultat de la recherche directement ici
+            $request->query->getInt('page', 1),
+            6
+        );
+
         return $this->render('article/index.html.twig', [
-            'articles' => $articles,
+            'pagination' => $pagination,
             'departments' => $departments,
             'selectedDepartment' => $selectedDepartmentId,
         ]);
     }
+
 
 
     #[Route('/new', name: 'app_article_new', methods: ['GET', 'POST'])]
