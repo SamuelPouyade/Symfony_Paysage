@@ -36,15 +36,13 @@
                                         {% endif %}
                                     </div>
                                     <div class="col-md-6">
-                                        <p class="card-text">{{ article.contenu }}</p>
+                                        <p class="card-text">{{ article.contenu|slice(0, 200) }}{% if article.contenu|length > 200 %}...{% endif %}</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="card-footer">
                                 <a href="{{ path('app_article_show', {'id': article.id}) }}" class="btn btn-primary">Voir</a>
-                                {% if is_granted('EDIT', article) %}
-                                    <a href="{{ path('app_article_edit', {'id': article.id}) }}" class="btn btn-success">Éditer</a>
-                                {% endif %}
+                                <a href="{{ path('app_article_edit', {'id': article.id}) }}" class="btn btn-success">Éditer</a>
                             </div>
                         </div>
                     </div>

@@ -21,10 +21,10 @@ class RegistrationFormType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'label' => 'Name',
+                'label' => 'Nom',
                 'required' => true,
                 'attr' => [
-                    'placeholder' => 'Enter your name',
+                    'placeholder' => 'Entrez votre nom',
                 ],
             ])
             ->add('email', EmailType::class)
@@ -32,14 +32,14 @@ class RegistrationFormType extends AbstractType
                 'mapped' => false,
                 'constraints' => [
                     new IsTrue([
-                        'message' => 'You should agree to our terms.',
+                        'message' => 'Vous devez accepter les conditions.',
                     ]),
                 ],
             ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
-                'first_options' => ['label' => 'Password'],
-                'second_options' => ['label' => 'Repeat Password'],
+                'first_options' => ['label' => 'Mot de passe'],
+                'second_options' => ['label' => 'Répétez votre mot de passe'],
                 'invalid_message' => 'The password fields must match.',
                 'required' => true,
             ]);

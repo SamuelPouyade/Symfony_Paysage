@@ -27,8 +27,8 @@ class ArticlesType extends AbstractType
                 'placeholder' => 'Sélectionnez un département',
             ])
             ->add('image', FileType::class, [
-                'label' => 'Image (JPG, JPEG, or PNG file)',
-                'required' => false, 
+                'label' => 'Image (JPG, JPEG ou PNG)',
+                'required' => false,
                 'data_class' => null,
             ]);
     }

@@ -6,12 +6,8 @@
     <div class="article-details">
         <h1 class="article-title">{{ article.titre }}</h1>
 
-        <div class="article-meta">
-            <p class="article-date">{{ article.datePublication ? article.datePublication|date('Y-m-d') : '' }}</p>
-        </div>
-
         {% if article.image %}
-            <img src="{{ asset('images/' ~ article.image.filename) }}" alt="Image de l'article" style="max-width: 100%; max-height: 400px; height: auto;"> <!-- Réduit la taille de l'image -->
+            <img src="{{ asset('images/' ~ article.image.filename) }}" alt="Image de l'article" style="max-width: 100%; max-height: 400px; height: auto;">
         {% endif %}
 
         <p class="article-content">{{ article.contenu }}</p>

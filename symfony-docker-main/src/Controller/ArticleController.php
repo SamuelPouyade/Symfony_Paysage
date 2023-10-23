@@ -11,6 +11,7 @@ use DateTime;
 use App\Repository\ArticlesRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use phpDocumentor\Reflection\Types\False_;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,21 +32,21 @@ class ArticleController extends AbstractController
         }
 
         if ($selectedDepartmentId === null) {
-            $articles = $articlesRepository->findAll();
+            $articles = $articlesRepository->findBy(['isValidated' => true]);
         } else {
-            $articles = $articlesRepository->findByDepartment($selectedDepartmentId);
+            $articles = $articlesRepository->findBy([$selectedDepartmentId,'isValidated'=> true]);
         }
 
         $departments = $departmentRepository->findAll();
 
         $user = $security->getUser();
 
-        $userArticles = $articlesRepository->findBy(['author' => $user]);
+        $userArticles = $articlesRepository->findBy(['author' => $user, 'isValidated'=> true]);
 
         $pagination = $paginator->paginate(
             $articles,
             $request->query->getInt('page', 1),
-            6
+            1
         );
 
         return $this->render('article/index.html.twig', [
@@ -75,11 +76,10 @@ class ArticleController extends AbstractController
         $user = $security->getUser();
 
         $userArticles = $articlesRepository->findBy(['author' => $user]);
-
         $pagination = $paginator->paginate(
             $articles,
             $request->query->getInt('page', 1),
-            1
+            2
         );
 
         return $this->render('article/perso.html.twig', [
@@ -120,6 +120,7 @@ class ArticleController extends AbstractController
             }
 
             $article->setAuthor($this->getUser());
+            $article->setIsValidated(false);
             $entityManager->persist($article);
             $entityManager->flush();
 
@@ -176,6 +177,7 @@ class ArticleController extends AbstractController
             }
 
             $article->setAuthor($this->getUser());
+            $article->setIsValidated(false);
             $entityManager->persist($article);
             $entityManager->flush();
 

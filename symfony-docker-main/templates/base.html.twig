@@ -21,8 +21,10 @@
                     {% if app.user %}
                         <li class="list-inline-item"><a class="nav-link" href="{{ path('app_change_password') }}">Mot de passe</a></li>
                         <li class="list-inline-item"><a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a></li>
-                        {% if userArticles is not empty and app.request.attributes.get('_route') != 'app_article_perso' %}
-                            <li class="list-inline-item"><a class="nav-link" href="{{ path('app_article_perso') }}" target="_self">Mes posts</a></li>
+                        {% if userArticles is defined %}
+                            {% if userArticles is not empty and app.request.attributes.get('_route') != 'app_article_perso' %}
+                                <li class="list-inline-item"><a class="nav-link" href="{{ path('app_article_perso') }}" target="_self">Mes posts</a></li>
+                            {% endif %}
                         {% endif %}
                     {% else %}
                         <li class="list-inline-item"><a class="nav-link" href="{{ path('app_login') }}">Connexion</a></li>

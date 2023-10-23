@@ -32,12 +32,11 @@ class PublicController extends AbstractController
         $user = $security->getUser();
 
         $userArticles = $articlesRepository->findBy(['author' => $user]);
-        dump($articles);
 
         $pagination = $paginator->paginate(
             $articles,
             $request->query->getInt('page', 1),
-            6
+            2
         );
 
         return $this->render('article/index.html.twig', [
