@@ -31,8 +31,8 @@ class PublicController extends AbstractController
 
         $user = $security->getUser();
 
-        dump($articles);
         $userArticles = $articlesRepository->findBy(['author' => $user]);
+        dump($articles);
 
         $pagination = $paginator->paginate(
             $articles,

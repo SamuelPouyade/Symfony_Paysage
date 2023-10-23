@@ -6,7 +6,9 @@
     <div class="container">
         <h1 class="mt-5 mb-4">Liste des lieux à découvrir</h1>
 
-        <a href="{{ path('app_article_new') }}" class="btn btn-primary mb-4">Créer un nouvel article</a>
+        {% if app.user %}
+            <a href="{{ path('app_article_new') }}" class="btn btn-primary mb-4">Créer un nouvel article</a>
+        {% endif %}
 
         <form action="{{ path('app_home') }}" method="get">
             <div class="form-group">

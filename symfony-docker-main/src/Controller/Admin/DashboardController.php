@@ -39,7 +39,8 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('App');
+            ->setTitle('App')
+            ->renderContentMaximized();
     }
 
     public function configureMenuItems(): iterable
@@ -47,5 +48,6 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
         yield MenuItem::linkToCrud('Users', 'fas fa-list', Users::class);
         yield MenuItem::linkToCrud('Articles', 'fas fa-newspaper', Articles::class);
+        yield MenuItem::linkToRoute('Retour à l\'application', 'fa fa-arrow-left', 'app_home');
     }
 }
