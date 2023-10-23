@@ -79,7 +79,7 @@ class ArticleController extends AbstractController
         $pagination = $paginator->paginate(
             $articles,
             $request->query->getInt('page', 1),
-            6
+            1
         );
 
         return $this->render('article/perso.html.twig', [
