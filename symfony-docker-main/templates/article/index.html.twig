@@ -8,7 +8,7 @@
 
         <a href="{{ path('app_article_new') }}" class="btn btn-primary mb-4">Créer un nouvel article</a>
 
-        <form action="{{ path('app_article_index') }}" method="get">
+        <form action="{{ path('app_home') }}" method="get">
             <div class="form-group">
                 <label for="department">Filtrer par département :</label>
                 <select name="department" id="department" class="form-control" onchange="this.form.submit()">
@@ -24,7 +24,7 @@
 
         <div class="row">
             {% for article in pagination %}
-                {% if article.isValidated and article.department.id == selectedDepartment %}
+                {% if article.isValidated and article.department.id == selectedDepartment or selectedDepartment == null %}
                     <div class="col-md-12 mb-6">
                         <div class="card">
                             <h5 class="card-title mb-6">{{ article.titre }}</h5>

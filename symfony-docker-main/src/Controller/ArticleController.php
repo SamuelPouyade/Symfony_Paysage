@@ -16,19 +16,31 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use App\Entity\Image;
 
 #[Route('/article')]
 class ArticleController extends AbstractController
 {
     #[Route('/', name: 'app_article_index', methods: ['GET'])]
-    public function index(ArticlesRepository $articlesRepository, DepartmentRepository $departmentRepository, Request $request, PaginatorInterface $paginator): Response
+    public function index(ArticlesRepository $articlesRepository, DepartmentRepository $departmentRepository, Request $request, PaginatorInterface $paginator, Security $security): Response
     {
-        $selectedDepartmentId = $request->query->get('department', null);
+        $selectedDepartmentId = $request->query->get('department');
 
-        $articles = $articlesRepository->findByDepartment($selectedDepartmentId);
+        if ($selectedDepartmentId === "") {
+            $selectedDepartmentId = null;
+        }
+
+        if ($selectedDepartmentId === null) {
+            $articles = $articlesRepository->findAll();
+        } else {
+            $articles = $articlesRepository->findByDepartment($selectedDepartmentId);
+        }
+
         $departments = $departmentRepository->findAll();
+
+        $user = $security->getUser();
+
+        $userArticles = $articlesRepository->findBy(['author' => $user]);
 
         $pagination = $paginator->paginate(
             $articles,
@@ -40,16 +52,29 @@ class ArticleController extends AbstractController
             'pagination' => $pagination,
             'departments' => $departments,
             'selectedDepartment' => $selectedDepartmentId,
+            'userArticles' => $userArticles,
         ]);
     }
 
-    #[Route('/', name: 'app_article_perso', methods: ['GET'])]
-    public function perso(ArticlesRepository $articlesRepository, DepartmentRepository $departmentRepository, Request $request, PaginatorInterface $paginator): Response
+    #[Route('/perso', name: 'app_article_perso', methods: ['GET'])]
+    public function perso(ArticlesRepository $articlesRepository, DepartmentRepository $departmentRepository, Request $request, PaginatorInterface $paginator,Security $security): Response
     {
-        $selectedDepartmentId = $request->query->get('department', null);
+        $selectedDepartmentId = $request->query->get('department');
 
-        $articles = $articlesRepository->findByDepartment($selectedDepartmentId);
+        if ($selectedDepartmentId === "") {
+            $selectedDepartmentId = null;
+        }
+
+        if ($selectedDepartmentId === null) {
+            $articles = $articlesRepository->findAll();
+        } else {
+            $articles = $articlesRepository->findByDepartment($selectedDepartmentId);
+        }
+
         $departments = $departmentRepository->findAll();
+        $user = $security->getUser();
+
+        $userArticles = $articlesRepository->findBy(['author' => $user]);
 
         $pagination = $paginator->paginate(
             $articles,
@@ -61,6 +86,7 @@ class ArticleController extends AbstractController
             'pagination' => $pagination,
             'departments' => $departments,
             'selectedDepartment' => $selectedDepartmentId,
+            'userArticles' => $userArticles,
         ]);
     }
 
@@ -107,15 +133,19 @@ class ArticleController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_article_show', methods: ['GET'])]
-    public function show(Request $request, Articles $article): Response
+    public function show(Request $request, Articles $article, Security $security, ArticlesRepository $articlesRepository): Response
     {
         $comment = new Comment();
         $commentForm = $this->createForm(CommentType::class, $comment);
         $commentForm->handleRequest($request);
+        $user = $security->getUser();
+
+        $userArticles = $articlesRepository->findBy(['author' => $user]);
 
         return $this->render('article/show.html.twig', [
             'article' => $article,
             'comment_form' => $commentForm->createView(),
+            'userArticles' => $userArticles,
         ]);
     }
 

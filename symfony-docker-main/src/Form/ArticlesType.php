@@ -28,8 +28,8 @@ class ArticlesType extends AbstractType
             ])
             ->add('image', FileType::class, [
                 'label' => 'Image (JPG, JPEG, or PNG file)',
-                'required' => false, // Allow the field to be empty
-                'data_class' => null, // Set the data_class to null to avoid conflicts
+                'required' => false, 
+                'data_class' => null,
             ]);
     }
 

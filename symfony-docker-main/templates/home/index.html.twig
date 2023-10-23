@@ -1,14 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des lieux à découvrir{% endblock %}
-
 {% block body %}
     <div class="container">
         <h1 class="mt-5 mb-4">Liste des lieux à découvrir</h1>
 
         <a href="{{ path('app_article_new') }}" class="btn btn-primary mb-4">Créer un nouvel article</a>
 
-        <form action="{{ path('app_article_perso') }}" method="get">
+        <form action="{{ path('app_home') }}" method="get">
             <div class="form-group">
                 <label for="department">Filtrer par département :</label>
                 <select name="department" id="department" class="form-control" onchange="this.form.submit()">
@@ -24,7 +22,7 @@
 
         <div class="row">
             {% for article in pagination %}
-                {% if (article.getAuthor() == app.user) or (selectedDepartment == null and article.getAuthor() == app.user)%}
+                {% if article.isValidated and article.department.id == selectedDepartment %}
                     <div class="col-md-12 mb-6">
                         <div class="card">
                             <h5 class="card-title mb-6">{{ article.titre }}</h5>
@@ -42,7 +40,7 @@
                             </div>
                             <div class="card-footer">
                                 <a href="{{ path('app_article_show', {'id': article.id}) }}" class="btn btn-primary">Voir</a>
-                                {% if is_granted('EDIT', article) %}
+                                {% if is_granted('EDIT', article) or article.getAuthor() == app.user %}
                                     <a href="{{ path('app_article_edit', {'id': article.id}) }}" class="btn btn-success">Éditer</a>
                                 {% endif %}
                             </div>
@@ -51,7 +49,6 @@
                 {% endif %}
             {% endfor %}
         </div>
-
 
         <div class="row">
             <div class="col-md-12 text-center">
@@ -63,4 +60,5 @@
             <p class="col-md-12">Aucun résultat</p>
         {% endif %}
     </div>
+
 {% endblock %}

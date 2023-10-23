@@ -35,7 +35,7 @@
 
         {{ form_end(comment_form) }}
 
-        <a href="{{ path('app_article_index') }}" class="btn btn-primary">Retour à la liste</a>
+        <a href="{{ path('app_article_perso') }}" class="btn btn-primary">Retour à la liste</a>
         <a href="{{ path('app_article_edit', {'id': article.id}) }}" class="btn btn-success">Éditer</a>
         <a href="{{ path('app_article_delete', {'id': article.id}) }}" class="btn btn-danger">Supprimer</a>
     </div>
