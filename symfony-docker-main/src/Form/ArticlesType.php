@@ -24,12 +24,12 @@ class ArticlesType extends AbstractType
             ->add('department', EntityType::class, [
                 'class' => Department::class,
                 'choice_label' => 'name',
+                'required' => true,
                 'placeholder' => 'Sélectionnez un département',
             ])
             ->add('image', FileType::class, [
                 'label' => 'Image (JPG, JPEG ou PNG)',
-                'required' => false,
-                'data_class' => null,
+                'required' => true,
             ]);
     }
 

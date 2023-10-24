@@ -14,7 +14,6 @@
         {{ form_label(form.image, 'Image (JPG, JPEG, ou PNG)', {'label_attr': {'class': 'custom-label'}}) }}
         <div class="custom-file">
             {{ form_widget(form.image, {'attr': {'class': 'custom-file-input'}}) }}
-            <span class="d-none">Aucun fichier</span>
         </div>
     </div>
     <button class="btn btn-primary">{{ button_label|default('Sauvegarder') }}</button>

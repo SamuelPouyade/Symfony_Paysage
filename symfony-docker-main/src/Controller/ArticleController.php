@@ -46,7 +46,7 @@ class ArticleController extends AbstractController
         $pagination = $paginator->paginate(
             $articles,
             $request->query->getInt('page', 1),
-            1
+            2
         );
 
         return $this->render('article/index.html.twig', [
@@ -198,6 +198,10 @@ class ArticleController extends AbstractController
     public function delete(Request $request, Articles $article, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$article->getId(), $request->request->get('_token'))) {
+            $comments = $article->getComments();
+            foreach ($comments as $comment) {
+                $entityManager->remove($comment);
+            }
             $entityManager->remove($article);
             $entityManager->flush();
         }

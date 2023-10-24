@@ -6,6 +6,7 @@ use App\Repository\UsersRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use phpDocumentor\Reflection\Types\Nullable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -25,8 +26,11 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private array $roles = [];
 
-    #[ORM\Column(length: 50, unique: true)]
-    private ?string $name = null;
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $firstName = null;
+
+    #[ORM\Column(length: 50,nullable: true)]
+    private ?string $lastName = null;
 
     /**
      * @var string The hashed password
@@ -69,14 +73,25 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
-    public function getName(): ?string
+    public function getFirstName(): ?string
     {
-        return $this->name;
+        return $this->firstName;
     }
 
-    public function setName(string $name): static
+    public function setFirstName(string $firstName): static
     {
-        $this->name = $name;
+        $this->firstName = $firstName;
+        return $this;
+    }
+
+    public function getLastName(): ?string
+    {
+        return $this->lastName;
+    }
+
+    public function setLastName(string $lastName): static
+    {
+        $this->lastName = $lastName;
         return $this;
     }
 
@@ -172,6 +187,7 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __toString()
     {
-        return $this->getName();
+        return $this->getFirstName();
+
     }
 }

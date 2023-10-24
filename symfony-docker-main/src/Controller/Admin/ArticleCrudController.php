@@ -3,7 +3,11 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Articles;
+use App\Entity\Image;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\HttpFoundation\Response;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 
@@ -14,6 +18,16 @@ class ArticleCrudController extends AbstractCrudController
         return Articles::class;
     }
 
+
+    public function configureFields(string $pageName): iterable
+    {
+        return [
+            TextField::new('titre'),
+            TextField::new('Contenu'),
+            ImageField::new('image'),
+            TextField::new('name')
+        ];
+    }
     public function validateArticle(): Response
     {
 
