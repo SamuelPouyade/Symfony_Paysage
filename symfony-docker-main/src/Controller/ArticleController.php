@@ -161,6 +161,7 @@ class ArticleController extends AbstractController
             $newImageFile = $form['image']->getData();
 
             if ($newImageFile !== null) {
+
                 $newFilename = uniqid().'.'.$newImageFile->guessExtension();
                 $newImage = new Image();
                 $newImage->setFilename($newFilename);
@@ -173,8 +174,10 @@ class ArticleController extends AbstractController
                 $entityManager->persist($newImage);
                 $article->setImage($newImage);
             } else {
+
                 $article->setImage($existingImage);
             }
+
 
             $article->setAuthor($this->getUser());
             $article->setIsValidated(false);
@@ -189,6 +192,7 @@ class ArticleController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
 
 
 

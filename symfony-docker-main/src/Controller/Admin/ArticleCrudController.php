@@ -4,10 +4,13 @@ namespace App\Controller\Admin;
 
 use App\Entity\Articles;
 use App\Entity\Image;
+use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\HttpFoundation\Response;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 
@@ -23,11 +26,16 @@ class ArticleCrudController extends AbstractCrudController
     {
         return [
             TextField::new('titre'),
-            TextField::new('Contenu'),
-            ImageField::new('image'),
-            TextField::new('name')
+            TextField::new('Contenu')
+                ->setRequired(true),
+            ImageField::new('image')
+                ->setBasePath('/images')
+                ->setUploadDir('public/images')
+                ->setRequired(true),
+            BooleanField::new('isValidated', 'Est valide'),
         ];
     }
+
     public function validateArticle(): Response
     {
 
